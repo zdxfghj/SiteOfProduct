@@ -1,0 +1,770 @@
+[special:strings]
+
+-/- Template Settings --------------------------\-
+
+--- Available themes:
+rawr_blue
+rawr_red
+rawr_green
+rawr_dark
+rawr_diehard
+rawr_black
+
+
+theme=rawr_blue
+
+Note: Feel free to make your own themes, we only limit
+      modification for theme submission to your
+      imagination, images and css. Use the rawr_blue
+      folder as a template. Remember to post your theme on
+      the forum or email us - contact[at]rawr-designs.com
+
+--- Available languages:
+English   = en	Dutch     = nl
+Spanish   = es	French    = fr
+Italian   = it	Polish    = pl
+Turkish   = tr	Russian   = ru
+Chinese   = cn	Ukrainian = ua
+German    = de	Czech     = cz
+
+language=ru
+Note: Feel free to translate your own or correct
+      a value. Use the English language file.
+      Post corrections or translations by forum
+      or email us - contact[at]rawr-designs.com
+
+--- Other settings:
+mod_updates=off
+mod_folder_tasks=on
+mod_search=on
+mod_statistics=off
+mod_shoutbox=off
+sym_ip=on
+btn_back=on
+create_folder=off
+rename=off
+
+Note: Disable all modules to make the list fill
+      the entire template width. To do this simply
+      change the value to 'off'. The values must be
+      set to either 'on' or 'off'.
+
+
+-\- Permanent Settings -------------------------/-	  
+build=0.1.2
+
+[special:begin]
+{.load|/template/rawr_default/languages/{.!language.}.txt|special:strings.}
+{.if|{.and| {.get|can upload.}|{.postvar|createfolder.} .}|{: {.mkdir|%folder-resource%\{.postvar|fldname.}.} :}/if.}
+{.if|{.and| {.get|can upload.}|{.postvar|renamefile.} .}|{: {.rename|%folder-resource%\{.postvar|oldname.}|%folder-resource%\{.postvar|newname.}.} :}/if.}
+
+[special:import]
+{.add folder|real|template.}
+{.set item|/template|hide=1.}
+{.set item|/template|no log=1.}
+{.set item|/template|not as download=*.}
+{.dialog|
+Thank you for choosing the RAWR-Template!
+
+Remember to check for updates and visit us at:
+http://www.RAWR-Designs.com
+.}
+
+[disclaimer]
+<!--
+  RAWR-Template - {.!build.}
+
+ (c) 2007-2009, RAWR Designs, Some Rights Reserved -
+	Christopher "That Stevens Guy" Stevens
+	Richard "Giant Eagle" Tuininga
+ (cc) http://creativecommons.org/licenses/by-nc-sa/3.0
+
+ Any queries? -
+	Email: contact[at]rawr-designs.com
+	Forum: http://www.rawr-designs.com/forum/
+ 	Homepage: http://www.rawr-designs.com
+-->
+
+[]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+{.$disclaimer.}
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta name="robots" content="noindex,nofollow"/>
+	<title>{.!lv_title.} - {.!lv_home.}%folder%</title>
+	<script type="text/javascript" src="/template/rawr_default/code/rawr_main.js"></script>
+	<script type="text/javascript" src="/template/rawr_default/code/rawr_previewbox.js"></script>
+	<link rel="stylesheet" type="text/css" href="/template/{.!theme.}/code/{.!theme.}_main.css"/>
+	<script type="text/javascript">
+		var serverFolder="%folder%";
+		var serverHost="%host%";
+		var theme="{.!theme.}";
+		var mod_folder_tasks="{.!mod_folder_tasks.}";
+		var mod_statistics="{.!mod_statistics.}";
+		var mod_shoutbox="{.!mod_shoutbox.}";
+		//Language Strings
+		var lv_loading="{.!lv_loading.}";
+		var lv_advSearch="{.!lv_advSearch.}";
+		var lv_search="{.!lv_search.}";
+		var lv_searchAlert="{.!lv_searchAlert.}";
+		var lv_files="{.!lv_files.}";
+		var lv_folders="{.!lv_folders.}";
+		var lv_both="{.!lv_both.}";
+		var lv_recursive="{.!lv_recursive.}";
+		var lv_current="{.!lv_current.}";
+		var lv_root="{.!lv_root.}";
+		var lv_hideTitle="{.!lv_hideTitle.}";
+		var lv_showTitle="{.!lv_showTitle.}";
+                var lv_delete="{.!lv_delete.}";
+                var lv_delete2="{.!lv_delete2.}";
+                var lv_delete3="{.!lv_delete3.}";
+                var lv_archive="{.!lv_archive.}";
+                var lv_create_folder="{.!lv_create_folder.}";
+                var lv_name_folder="{.!lv_name_folder.}";
+                var lv_rename="{.!lv_rename.}";
+                var lv_old_name="{.!lv_old_name.}";
+                var lv_new_name="{.!lv_new_name.}";
+	</script>
+	<noscript><style type="text/css">.hide{display:none}</style></noscript>
+<script type="text/javascript">
+<!--
+function _(id) { return typeof id == 'string' ? document.getElementById(id) : id; }
+function addValueToForm(form,name,value) {
+    i = document.createElement('input');
+    i.setAttribute('name', name);
+    i.setAttribute('value', value);
+    i.setAttribute('type', 'hidden');
+    _(form).appendChild(i);
+} // addValueToForm
+function submitAdding(form, data, action) {
+    form = _(form);
+    for (var i in data) {
+        var es = form.getElementsByTagName('input');
+        for (var j=0; j < es.length; j++) {
+            var e = es[j];
+            if (e.name == i)
+                e.parentNode.removeChild(e);
+        }
+    }
+    for (var i in data)
+        addValueToForm(form, i, data[i]);
+    if (typeof action != 'undefined')
+        form.setAttribute('action', action);
+    form.submit();
+    return false;
+} // submitAdding
+function doArchive() {
+    if (!confirm("{.!lv_delete3.}")) return false;
+    var allIncluded = true;
+    var is = document.getElementsByName("selection");
+    for (var i=0; i < is.length; i++)
+        if (!is[i].checked) {
+            allIncluded = false;
+            break;
+        }
+    // if all are selected, we disable it temporarily
+    if (allIncluded)
+        for (var i=0; i < is.length; i++)
+            is[i].checked = false;
+    submitAdding("filelist", {"action":"archive"}, "~folder.tar?recursive");
+    if (allIncluded)
+        for (var i=0; i < is.length; i++)
+            is[i].checked = true;
+    return false;
+} // doArchive
+// -->
+</script>
+	<!--[if lte IE 6]><style type="text/css">#mainInner{width:980px}</style><![endif]-->
+</head>
+<body>
+<!--{.comment|--><h1>WARNING: This template will only work with HFS 2.3 or greater; macros must be enabled.</h1><!--.} -->
+<div id="mainOuter">
+<div id="mainInner"><div id="mainInner1"><div id="mainInner2"><div id="mainInner3">
+<div id="header">
+	<div><div id="bCrumbs">{.breadcrumbs|{:<a href="%bread-url%">{.or|%bread-name%|{.!lv_home.}.} | </a>:}.}</div></div>
+</div>
+<div id="content">
+<div id="navbar">
+	{.if not|%user%|<div class="bigBtn"><a href="~login"><span>{.!lv_login.}</span></a></div>.}
+	
+</div>
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr>
+<td width="100%" valign="top" id="tableCol">
+%folder-comment%
+{.$files.}
+</td>
+{.if|{.match|{.!mod_folder_tasks.};{.!mod_statistics.};{.!mod_shoutbox.}|on.}|
+<td width="175" valign="top" id="moduleCol">
+	<span id="specialBox"></span>
+{.if|{.{.!mod_updates.}=on.}|
+	{.if|{.match|127.*;10.*;192.168.*|%ip%.}|
+	<div class="module">
+	<div class="modHeading">
+		<span><img src="/template/rawr_default/images/spacer.gif" width="8" align="top" alt=""/></span>
+		{.!lv_check.}
+	</div>
+	<div class="modContent">
+	{.if|{.?updates.}|
+		{:
+		{.set|new_build|{.load|http://www.rawr-designs.com/updater.php?project=template&ext=.txt.}.}
+		<span>[{.!build.}]</span>{.!lv_currentBuild.}:<br/>
+		<span>[{.^new_build.}]</span>{.!lv_latestBuild.}:
+		<div class="divide">
+			<center>
+			<a href="http://www.rawr-designs.com/projects/template/index.html" target="_blank">
+			-
+			{.if|{.{.^new_build.}={.!build.}.}|{.!lv_homepage.}|{.!lv_download.} {.^new_build.}.}
+			-
+			</a>
+			</center>
+		</div>
+		:}
+	|<center><a href="http://%host%%encoded-folder%?updates=1">- {.!lv_checkNow.} -</a></center>.}
+	</div>
+	</div>
+	.}
+.}
+{.if|{.{.!mod_folder_tasks.}=on.}|
+	<div class="module">
+	<div class="modHeading">
+		<span>
+		<a href="javascript:pinModule('Folder_Tasks');" id="Folder_Tasks_Link" title="{.!lv_hideTitle.}"><img
+			class="hide" src="/template/{.!theme.}/images/hide.gif" align="top" alt=""/>
+			<noscript><img src="/template/rawr_default/images/spacer.gif" width="8" align="top" alt=""/></noscript>
+		</a>
+		</span>
+		{.!lv_folderTasks.}
+	</div>
+	<div class="modContent" id="Folder_Tasks">
+		{.if|{.{.!mod_search.}=on.}|
+		<form action="/" name="simpleSearch" method="get">
+			<input type="text" name="search" maxlength="32" value="{.if not|{.$search-data.}|{.!lv_search.}|{.$search-data.}.}" onclick="if(this.value=='{.if not|{.$search-data.}|{.!lv_search.}|{.$search-data.}.}')this.value=''"/>
+		</form>
+		<a href="javascript:initBox('specialBox','search');" class="hide">{.!lv_advSearch.}</a>
+		.}
+		{.if|%number%|
+		<div class="divide">
+			<span>[%number-files%]</span>{.!lv_files.}:<br/>
+			<span>[%number-folders%]</span>{.!lv_folders.}:<br/>
+			<span>[%number%]</span>{.!lv_totalObjects.}:<br/>
+			<span>[%total-size%]</span>{.!lv_totalSize.}:
+		</div>
+		<div {.if|{.{.!mod_search.}=on.}|class="divide".}>
+			<select class="hide" onchange="window.location=this.value;return false;">
+				<option type="hidden" selected="selected">{.!lv_sortBy.}</option>
+				<option value="{.get|url|sort=t|rev={.and|{.?sort=t.}|{.not|{.?rev.}.}.}.}">- {.!lv_age.}</option>
+				<option value="{.get|url|sort=d|rev={.and|{.?sort=d.}|{.not|{.?rev.}.}.}.}">- {.!lv_hits.}</option>
+				<option value="{.get|url|sort=n|rev={.and|{.?sort=n.}|{.not|{.?rev.}.}.}.}">- {.!lv_name.}</option>
+				<option value="{.get|url|sort=s|rev={.and|{.?sort=s.}|{.not|{.?rev.}.}.}.}">- {.!lv_size.}</option>
+				<option value="{.get|url|sort=e|rev={.and|{.?sort=e.}|{.not|{.?rev.}.}.}.}">- {.!lv_type.}</option>
+			</select>
+			<noscript>
+				{.!lv_sortBy.}<br/>
+				<a href="{.get|url|sort=t|rev={.and|{.?sort=t.}|{.not|{.?rev.}.}.}.}">{.!lv_age.}</a>,
+				<a href="{.get|url|sort=d|rev={.and|{.?sort=d.}|{.not|{.?rev.}.}.}.}">{.!lv_hits.}</a>,
+				<a href="{.get|url|sort=n|rev={.and|{.?sort=n.}|{.not|{.?rev.}.}.}.}">{.!lv_name.}</a>,
+				<a href="{.get|url|sort=s|rev={.and|{.?sort=s.}|{.not|{.?rev.}.}.}.}">{.!lv_size.}</a>,
+				<a href="{.get|url|sort=e|rev={.and|{.?sort=e.}|{.not|{.?rev.}.}.}.}">{.!lv_type.}</a>
+			</noscript>
+		</div>
+		<div class="divide">
+			&nbsp;&#8226;<a href="?tpl=list&amp;folders-filter=%5C{.if|{.get|can recur.}|&amp;recursive.}" target="_blank" title="{.!lv_fileListingTitle.}"> {.!lv_fileListing.}</a>
+			{.if|{.get|can archive.}|<br/>&nbsp;&#8226;<a href="%folder%~folder.tar{.if|{.get|can recur.}|?recursive.}" title="{.!lv_archiveTitle.}"> {.!lv_archive.}</a>.}
+			{.if|{.get|can upload.}|<br/>&nbsp;&#8226;<a href="~upload" title="{.!lv_uploadTitle.}"> {.!lv_upload.}</a>.}
+		</div>
+		.}
+	</div>
+	</div>
+.}
+{.if|{.{.!mod_statistics.}=on.}|
+	<div class="module">
+	<div class="modHeading">
+		<span>
+		<a href="javascript:pinModule('Statistics');" id="Statistics_Link" title="{.!lv_hideTitle.}"><img
+			class="hide" src="/template/{.!theme.}/images/hide.gif" align="top" alt=""/>
+			<noscript><img src="/template/rawr_default/images/spacer.gif" width="8" align="top" alt=""/></noscript>
+		</a>
+		</span>
+		{.!lv_statistics.}
+	</div>
+	<div class="modContent" id="Statistics">
+		<div id="stats">{.$stats.}</div>
+		{.if|{.{.!sym_ip.}=on.}|<br/><span>[%ip%]</span>{.!lv_yourIp.}:.}
+		{.if|%user%|<br/><span>[%user%]</span>{.!lv_yourId.}:.}
+	</div>
+	</div>
+.}
+{.if|{.{.!mod_shoutbox.}=on.}|
+	<div class="module">
+	<div class="modHeading">
+		<span>
+		<a href="javascript:pinModule('Shoutbox');" id="Shoutbox_Link" title="{.!lv_hideTitle.}"><img
+			class="hide" src="/template/{.!theme.}/images/hide.gif" align="top" alt=""/>
+			<noscript><img src="/template/rawr_default/images/spacer.gif" width="8" align="top" alt=""/></noscript>
+		</a>
+		</span>
+		{.!lv_shoutbox.}
+	</div>
+	<div class="modContent" id="Shoutbox">						
+		<iframe src="/template/rawr_default/shoutbox/display_posts/?sort=t&rev=1" height="240" width="153" frameborder="0"></iframe>
+	</div>
+	</div>
+.}
+</td>
+.}
+</tr>
+</table>
+</div>
+<div id="footer">
+	<br/>
+	{.!lv_buildTime.}: %build-time%sec
+</div>
+</div></div></div></div>
+</div>
+<script type="text/javascript">pageLoad()</script>
+</body>
+</html>
+
+[files]
+<table cellspacing="1" cellpadding="0" border="0" width="100%">
+<tr>
+<td colspan="3" class="heading">
+{.if|{.match|{.!mod_folder_tasks.};{.!mod_statistics.};{.!mod_shoutbox.}|on.}|
+	<span class="hide">
+		<a href="javascript:pinModule('moduleCol');" id="moduleCol_Link" title="{.!lv_hideTitle.}"><img src="/template/{.!theme.}/images/show.gif" align="top" alt=""/></a>
+	</span>
+.}
+	&nbsp;
+</td>
+</tr>
+{.if not|%number%|
+<tr>
+<td colspan="3">
+	<center>
+	{.if|{.$search-data.}|{.!lv_searchError1.}&nbsp;<i>{.$search-data.}</i>&nbsp;{.!lv_searchError2.}|{.!lv_filelistError.}.}
+	</center>
+</td>
+</tr>
+|<form method='post' id='filelist'>%list%.}
+</table>
+{.if|{.and|{.get|can delete.}{.get|can archive.}|{.or|%number%|.}.}|
+		<input type='hidden' name='action' value='delete'>
+		<input style="margin-left:15px; margin-top:13px;" type='checkbox' onclick='var is = document.getElementsByName("selection"); for (var i=0; i < is.length; i++) is[i].checked = this.checked;'>&nbsp;&nbsp;<span style="color:#006633;"><b><---- {.!lv_delete2.}</b></span>
+{.if|{.get|can delete.}|
+<input style='z-index:1; margin-left:1em; margin-top:1px;' type='button' value='{.!lv_delete.}' onclick='return confirm("{.!lv_delete3.}") && submitAdding("filelist", {"action":"delete"}, "")'>.}
+{.if|{.get|can archive.}| 
+<input style='z-index:1; margin-left:1em; margin-top:1px;' type='button' value='{.!lv_archive.}' onclick='return doArchive();'>.}
+/if.}
+{.and|{.get|can upload.}|{.{.!create_folder.}=on.}|
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#006633;"><b>{.!lv_name_folder.}</b></span> 
+&nbsp;<input style="z-index:1" type='text' name='fldname' maxlength="50" size="25">
+&nbsp;<input style="z-index:1" type='submit' name='createfolder' value='{.!lv_create_folder.}'>.}
+{.and|{.get|can upload.}|{.{.!rename.}=on.}|
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input style="z-index:1" type='text' name='oldname' maxlength="50" size="28" value="{.!lv_old_name.}" onclick="if(this.value=='{.!lv_old_name.}')this.value=''"/>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<input style="z-index:1" type='text' name='newname' maxlength="50" size="27" value="{.!lv_new_name.}" onclick="if(this.value=='{.!lv_new_name.}')this.value=''"/>
+&nbsp;<input style="z-index:1" type='submit' name='renamefile' value='{.!lv_rename.}'>.}
+</form>
+
+[folder]
+<tr>
+<td class="iconCol"><a href="%item-url%"><div style="background:url('/~img_folder') center center no-repeat"></div></a>{.if|{.get|can delete.}{.and|{.get|can access.}|{.get|can archive item.}.}|
+<input style="margin-left:15px; margin-top:-15px; margin-bottom:8px;" type=checkbox value="%item-url%" name='selection'>.}
+</td>
+<td class="fileCol{.if not|{.get|can access.}|protected.}">
+<div class="fileInfo">
+	<a href="%item-url%">%item-name%{.if|{.get|is new.}|&nbsp;-&nbsp;<b class="new">{.!lv_new.}</b>.}</a>
+	<br/>%comment%
+	<div class="info"><b>{.!lv_size.}:</b> <i>{.!lv_folder.}</i></div><div class="info"><b>{.!lv_hits.}:</b> %item-dl-count%</div><div class="age"><b>{.!lv_age.}:</b> %item-modified%</div>
+</div>
+</td>
+<td class="quickCol">
+	<div class="quickBtn {.if not|{.get|can access.}|disabled.}"><a href="%item-url%"><img src="/template/{.!theme.}/images/go.gif" alt="GO"/></a></div>
+	{.if|{.get|can archive.}|<div class="quickBtn1 {.if not|{.get|can access.}|disabled.}"><a href="%item-url%~folder.tar{.if|{.get|can recur.}|?recursive.}" title="{.!lv_archiveTitle.}"><img src="/template/{.!theme.}/images/download_btn.png" alt="DL"/></a></div>|<div class="quickBtn1 disabled"><img src="/template/{.!theme.}/images/download.gif" alt="DL"/></div>.}
+</td>
+</tr>
+
+[link]
+<tr>
+<td class="iconCol"><a href="%item-url%"><div style="background:url('/~img_link') center center no-repeat"></div></a></td>
+<td class="fileCol{.if not|{.get|can access.}|protected.}">
+	<div class="fileInfo"><a href="%item-url%" target="_blank">%item-name%{.if|{.get|is new.}|&nbsp;-&nbsp;<b class="new">{.!lv_new.}</b>.}</a>%comment%</div>
+</td>
+<td class="quickCol">
+	<div class="quickBtn disabled"></div>
+	<div class="quickBtn1"><a href="%item-url%" target="_blank"><img src="/template/{.!theme.}/images/go.gif" alt="GO"/></a></div>
+</td>
+</tr>
+
+[file]
+<tr>
+<td class="iconCol">
+	<a href="%item-url%"><div style="background:url('/~img_file') center center no-repeat"></div>	</a>
+{.if|{.get|can delete.}{.and|{.get|can access.}|{.get|can archive item.}.}|
+<input style="margin-left:15px; margin-top:-15px; margin-bottom:8px;" type=checkbox value="%item-url%" name='selection'>.}
+</td>
+<td class="fileCol{.if not|{.get|can access.}|protected.}">
+	<div class="fileInfo">
+	<a href="%item-url%" {.$target.}>%item-name%{.if|{.get|is new.}|&nbsp;-&nbsp;<b class="new">{.!lv_new.}</b>.}</a><br/>
+	%comment%
+	<div class="info"><b>{.!lv_size.}:</b> %item-size%</div><div class="info"><b>{.!lv_hits.}:</b> %item-dl-count%</div><div class="age"><b>{.!lv_age.}:</b> %item-modified%</div>
+	</div>
+</td>
+<td class="quickCol">{.switch|%item-ext%|,|jpg,jpeg,png,gif,bmp,tif,tiff,mp3,flv,mp4,m4a,mov,3gp,aac,avi,divx,wmv,wma,swf|{.$preview-btn.}|<div class="quickBtn disabled hide"></div>.}
+	<noscript><div class="quickBtn disabled"></div></noscript>
+	<div class="quickBtn1 {.if not|{.get|can access.}|disabled.}"><a href="%item-url%" {.$target.}><img src="/template/{.!theme.}/images/download.gif" alt="DL" title="{.!lv_downloadTitle.}"/></a></div>
+</td>
+</tr>
+
+[preview-btn]
+<div id="s%sequential%" class="quickBtn hide" {.switch|%item-ext%|,|mp3,flv,mp3,flv,mp4,m4a,mov,3gp,aac|name="mediaFile"|.}><a href="javascript:void(0);" onclick="initBox('Box-'+(%sequential%+1),this.name);" name="%item-full-url%"><img src="/template/{.!theme.}/images/preview.gif" alt="P" title="{.!lv_previewTitle.}" align="middle"/></a></div><span id="Box-%sequential%"></span>
+[target]
+{.switch|%item-ext%|,|gif,pdf,htm,html,css,js,txt,jpg,jpeg,png,xml|target="_blank"|.}
+[search-data]
+{.?search.}{.cut|2|-1|{.?filter.}{.if not|{.?files-filter=\ .}|{.?files-filter.}.}{.if not|{.?folders-filter=\ .}|{.?folders-filter.}.}.}
+[stats = stats.htm|no log]
+<span>[%uptime%]</span>{.!lv_uptime.}:<br/><br/>
+<span>[%connections%]</span>{.!lv_connections.}:<br/>
+<span>[%speed-in%KB/s]</span>{.!lv_inbound.}:<br/>
+<span>[%speed-out%KB/s]</span>{.!lv_outbound.}:<br/>
+<span>[%total-in%]</span>{.!lv_totalIn.}:<br/>
+<span>[%total-out%]</span>{.!lv_totalOut.}:<br/>
+<span>[%total-downloads%]</span>{.!lv_totalDownloads.}:<br/>
+<span>[%total-uploads%]</span>{.!lv_totalUploads.}:<br/>
+<span>[%total-hits%]</span>{.!lv_totalHits.}:<br/>
+[comment]
+<div class="comment">%item-comment%</div>
+[folder-comment]
+<div id="folderComment">%item-comment%</div>
+[error-page]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+{.$disclaimer.}
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>{.!lv_serverError.}</title>
+	<script type="text/javascript" src="/template/rawr_default/code/rawr_main.js"></script>
+	<link rel="stylesheet" type="text/css" href="/template/{.!theme.}/code/{.!theme.}_main.css"/>
+	<script type="text/javascript">
+		var theme="{.!theme.}";
+		var mod_statistics="{.!mod_statistics.}";
+		//Language Strings
+		var lv_hideTitle="{.!lv_hideTitle.}";
+		var lv_showTitle="{.!lv_showTitle.}";
+	</script>
+	<noscript><style type="text/css">.hide{display:none}</style></noscript>
+	<!--[if lte IE 6]><style type="text/css">#mainInner{width:980px}</style><![endif]-->
+</head>
+<body>
+<div id="mainOuter">
+<div id="mainInner"><div id="mainInner1"><div id="mainInner2"><div id="mainInner3">
+	<div id="header">
+		<div><div id="bCrumbs"><a href="/">{.!lv_home.}</a>/{.!lv_serverError.}/<br></div></div>
+	</div>
+	<div id="content">
+		<div id="navbar">
+			{.if|{.{.!btn_back.}=on.}|<div id="backBtn"><a href="/"><span>{.!lv_back.}</span></a></div>.}
+		</div>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+		<tr>
+			<td width="100%" valign="top" id="tableCol">
+				<div class="contModule">
+					<div class="contHeading">
+{.if|{.{.!mod_statistics.}=on.}|
+						<span class="hide">
+							<a href="javascript:pinModule('moduleCol');" id="moduleCol_Link" title="{.!lv_hideTitle.}"><img src="/template/{.!theme.}/images/show.gif" align="top" alt=""/></a>
+						</span>
+.}
+					&nbsp;
+					</div>
+					<div class="contContent" align="center">
+						%content%
+					</div>
+				</div>
+			</td>
+{.if|{.{.!mod_statistics.}=on.}|
+			<td width="175" valign="top" id="moduleCol">
+				<div class="module">
+					<div class="modHeading">
+						<span>
+							<a href="javascript:pinModule('Statistics');" id="Statistics_Link" title="{.!lv_hideTitle.}"><img
+								class="hide" src="/template/{.!theme.}/images/hide.gif" align="top" alt=""/>
+								<noscript><img src="/template/rawr_default/images/spacer.gif" width="8" align="top" alt=""/></noscript>
+							</a>
+						</span>
+						{.!lv_statistics.}
+					</div>
+					<div class="modContent" id="Statistics">
+						<div id="stats">{.$stats.}</div>
+						{.if|{.{.!sym_ip.}=on.}|<br/><span>[%ip%]</span>{.!lv_yourIp.}:<br/>.}
+						{.if|%user%|<span>[%user%]</span>{.!lv_yourId.}:.}
+					</div>
+				</div>
+			</td>
+.}
+		</tr>
+		</table>
+	</div>
+	<div id="footer">
+		<br/>
+		<br/>
+	</div>
+</div></div></div></div>
+</div>
+<script type="text/javascript">pageLoad()</script>
+</body>
+</html>
+[not found]
+{.!lv_404Error.}
+[overload]
+{.!lv_overloadError.}
+[max contemporary downloads]
+{.!lv_maxError.}<br/><br/>
+[unauthorized]
+{.!lv_unauthorizedError.}<br/><br/>
+[deny]
+{.!lv_denyError.}<br/><br/>
+[ban]
+{.!lv_banError.}: %reason%<br/><br/>
+[upload]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+{.$disclaimer.}
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>{.!lv_upload.}</title>
+	<script type="text/javascript" src="/template/rawr_default/code/rawr_main.js"></script>
+	<script type="text/javascript">
+		var theme="{.!theme.}";
+		var mod_statistics="{.!mod_statistics.}";
+		//Language Strings
+		var lv_hideTitle="{.!lv_hideTitle.}";
+		var lv_showTitle="{.!lv_showTitle.}";
+	</script>
+	<link rel="stylesheet" type="text/css" href="/template/{.!theme.}/code/{.!theme.}_main.css"/>
+	<noscript><style type="text/css">.hide{display:none}#f1,#f2,#f3,#f4,#f5,#f6,#f7,#f8,#f9{display:block}</style></noscript>
+	<!--[if lte IE 6]>
+		<style type="text/css">#mainInner{width:980px}</style>
+		<noscript><style type="text/css">#mainInner{width:100%}</style></noscript>
+	<![endif]-->
+</head>
+<body>
+<div id="mainOuter">
+<div id="mainInner"><div id="mainInner1"><div id="mainInner2"><div id="mainInner3">
+	<div id="header">
+		<div>
+			<div id="bCrumbs">{.breadcrumbs|{:<a href="%bread-url%">{.or|%bread-name%|{.!lv_home.}.}/</a>:}.}</div>
+		</div>
+	</div>
+	<div id="content">
+		<div id="navbar">
+			<noscript>
+				<div class="biggerBtn"><a href="~upload" target="_top"><span>{.!lv_closeTransfers.}</span></a></div>
+			</noscript>
+			<div class="biggerBtn">
+				<a href="javascript:void();" onclick="open('/~progress','{.!lv_transfers.}','width=300,height=500,left=100,top=100,scrollbars=1,resizable=1');" class="hide"><span>{.!lv_openTransfers.}</span></a>
+				<noscript><a href="~upload+progress" target="_top"><span>{.!lv_openTransfers.}</span></a></noscript>
+			</div>
+			{.if|{.{.!btn_back.}=on.}|<div id="backBtn"><a href="%encoded-folder%" target="_parent"><span>{.!lv_back.}</span></a></div>.}
+		</div>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+		<tr>
+			<td width="100%" valign="top" id="tableCol">
+				%folder-comment%
+				<div class="contModule">
+					<div class="contHeading">
+{.if|{.{.!mod_statistics.}=on.}|
+						<span class="hide">
+							<a href="javascript:pinModule('moduleCol');" id="moduleCol_Link" title="{.!lv_hideTitle.}"><img src="/template/{.!theme.}/images/show.gif" align="top" alt=""/></a>
+						</span>
+.}
+						&nbsp;
+					</div>
+					<div class="contContent" align="center">
+						<form action="%encoded-folder%" name="upfrm" target="_parent" method="post" enctype="multipart/form-data" onsubmit="disableBtns();">
+							<input class="uploadInput" name="upbtn" value="{.!lv_upload.}" type="submit"/>
+							<input class="uploadInput hide" name="more" onclick="addInput();" value="{.!lv_addInput.}" type="button"/><br/>
+							<input type="file" name="fileupload1" size="40"/>
+							<input id="f1" type="file" name="fileupload2" size="40"/>
+							<input id="f2" type="file" name="fileupload3" size="40"/>
+							<input id="f3" type="file" name="fileupload4" size="40"/>
+							<input id="f4" type="file" name="fileupload5" size="40"/>
+							<input id="f5" type="file" name="fileupload6" size="40"/>
+							<input id="f6" type="file" name="fileupload7" size="40"/>
+							<input id="f7" type="file" name="fileupload8" size="40"/>
+							<input id="f8" type="file" name="fileupload9" size="40"/>
+							<input id="f9" type="file" name="fileupload10" size="40"/>
+						</form>
+					</div>
+				</div>
+			</td>
+{.if|{.{.!mod_statistics.}=on.}|
+			<td width="175" valign="top" id="moduleCol">
+				<div class="module">
+					<div class="modHeading">
+						<span>
+							<a href="javascript:pinModule('Statistics');" id="Statistics_Link" title="{.!lv_hideTitle.}"><img
+								class="hide" src="/template/{.!theme.}/images/hide.gif" align="top" alt=""/>
+								<noscript><img src="/template/rawr_default/images/spacer.gif" width="8" align="top" alt=""/></noscript>
+							</a>
+						</span>
+						{.!lv_statistics.}
+					</div>
+					<div class="modContent" id="Statistics">
+						<div id="stats">{.$stats.}</div>
+						{.if|{.{.!sym_up_ip.}=on.}|<br/><span>[%ip%]</span>{.!lv_yourIp.}:<br/>.}
+						{.if|%user%|<span>[%user%]</span>{.!lv_yourId.}:.}<br/>
+						<br/><span>[%diskfree%]</span>{.!lv_freeSpace.}:
+					</div>
+				</div>
+			</td>
+.}
+		</tr>
+		</table>
+	</div>
+	<div id="footer">
+		<br/>
+		<br/>
+	</div>
+</div></div></div></div>
+</div>
+<script type="text/javascript">pageLoad()</script>
+</body>
+</html>
+[upload-results]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+{.$disclaimer.}
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>{.!lv_upload.} - {.!lv_results.}</title>
+	<script type="text/javascript" src="/template/rawr_default/code/rawr_main.js"></script>
+	<script type="text/javascript">
+		var theme="{.!theme.}";
+		var mod_statistics="{.!mod_statistics.}";
+		//Language Strings
+		var lv_hideTitle="{.!lv_hideTitle.}";
+		var lv_showTitle="{.!lv_showTitle.}";
+	</script>
+	<link rel="stylesheet" type="text/css" href="/template/{.!theme.}/code/{.!theme.}_main.css"/>
+	<noscript><style type="text/css">.hide{display:none}</style></noscript>
+	<!--[if lte IE 6]><style type="text/css">#mainInner{width:980px}</style><![endif]-->
+</head>
+<body>
+<div id="mainOuter">
+<div id="mainInner"><div id="mainInner1"><div id="mainInner2"><div id="mainInner3">
+	<div id="header">
+		<div>
+			<div id="bCrumbs">{.breadcrumbs|{:<a href="%bread-url%">{.or|%bread-name%|{.!lv_home.}.}/</a>:}.}</div>
+		</div>
+	</div>
+	<div id="content">
+		<div id="navbar">
+			{.if|{.{.!btn_back.}=on.}|<div id="backBtn"><a href="%encoded-folder%" target="_parent"><span>{.!lv_back.}</span></a></div>.}
+		</div>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+		<tr>
+			<td width="100%" valign="top" id="tableCol">
+				%folder-comment%
+				<div class="contModule">
+					<div class="contHeading">
+{.if|{.{.!mod_statistics.}=on.}|
+						<span class="hide">
+							<a href="javascript:pinModule('moduleCol');" id="moduleCol_Link" title="{.!lv_hideTitle.}"><img src="/template/{.!theme.}/images/show.gif" align="top" alt=""/></a>
+						</span>
+.}
+						&nbsp;
+					</div>
+					<div class="contContent">
+						%uploaded-files%
+					</div>
+				</div>
+			</td>
+{.if|{.{.!mod_statistics.}=on.}|
+			<td width="175" valign="top" id="moduleCol">
+				<div class="module">
+					<div class="modHeading">
+						<span>
+							<a href="javascript:pinModule('Statistics');" id="Statistics_Link" title="{.!lv_hideTitle.}"><img
+								class="hide" src="/template/{.!theme.}/images/hide.gif" align="top" alt=""/>
+								<noscript><img src="/template/rawr_default/images/spacer.gif" width="8" align="top" alt=""/></noscript>
+							</a>
+						</span>
+						{.!lv_statistics.}
+					</div>
+					<div class="modContent" id="Statistics">
+						<div id="stats">{.$stats.}</div>
+						{.if|{.{.!sym_up_ip.}=on.}|<br/><span>[%ip%]</span>{.!lv_yourIp.}:<br/>.}
+						{.if|%user%|<span>[%user%]</span>{.!lv_yourId.}:.}<br/>
+						<br/><span>[%diskfree%]</span>{.!lv_freeSpace.}:
+					</div>
+				</div>
+			</td>
+.}
+		</tr>
+		</table>
+	</div>
+	<div id="footer">
+		<br/>
+		<br/>
+	</div>
+</div></div></div></div>
+</div>
+<script type="text/javascript">pageLoad()</script>
+</body>
+</html>
+[upload-success]
+&nbsp;&#8226;&nbsp;{.!lv_success.}: %item-name% --- %item-size% (%speed% KB/s)<br/><br/>
+[upload-failed]
+&nbsp;&#8226;&nbsp;{.!lv_failure.}: %item-name%: --- %reason%<br/><br/>
+[upload+progress]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+{.$disclaimer.}
+<head>
+<title>{.!lv_upload.}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<frameset cols="300,*" frameborder="0" framespacing="0" framepadding="0">
+	<frame name=progress src="/~progress">
+	<frame src="%encoded-folder%~upload-no-progress">
+</frameset>
+</head>
+</html>
+[progress]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+{.$disclaimer.}
+<head>
+	<meta http-equiv="Refresh" content="3; URL=/~progress">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<title>{.!lv_transfers.}</title>
+	<link rel="stylesheet" type="text/css" href="/template/{.!theme.}/code/{.!theme.}_main.css"/>
+	<!--[if lte IE 6]><style type="text/css">#mainInner{width:100%}</style><![endif]-->
+</head>
+<body>
+<div id="mainOuter">
+<div id="mainInner"><div id="mainInner1"><div id="mainInner2"><div id="mainInner3">
+<div id="header"><div id="graph"></div></div>
+<div id="content">
+	<div class="contModule">
+		<div class="contHeading">{.!lv_transfers.} &nbsp; </div>
+		<div class="contContent" align="center">
+			%progress-files%
+		</div>
+	</div>
+</div>
+<div id="footer"><br/><center>{.!lv_refresh.}: 3 sec</center></div>
+</div></div></div></div>
+</div>
+</body>
+</html>
+[progress-nofiles]
+<b>{.!lv_noTransfers.}</b>
+[progress-upload-file]
+<div class="p"><b><u>{.!lv_upstream.}</u><br/>%filename%</b><br/>%done-bytes% / %total-bytes% bytes<br/>{.!lv_curUploadSpeed.}:<br/>%speed-kb% KB/s<br/>{.!lv_percComplete.}: %perc%%<br/><div class="pOut"><div class="pIn" style="width:%perc%%"></div></div></div>
+[progress-download-file]
+<div class="p"><b><u>{.!lv_downstream.}</u><br/>%filename%</b><br/>%done-bytes% / %total-bytes% bytes<br/>{.!lv_curDownloadSpeed.}:<br/>%speed-kb% KB/s<br/>{.!lv_percComplete.}: %perc%%<br/><div class="pOut"><div class="pIn" style="width:%perc%%"></div></div></div>
