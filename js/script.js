@@ -32,15 +32,44 @@ tabMenu.addEventListener('click', (event) =>{
    }
 });
 
+///timer
 
+const deadtime = '2023-03-12';
 
-var c='helo.pdf';
-console.log(c.substr(  c.lastIndexOf('.')  ) .toLowerCase() );
-switch (  c.substr(  c.lastIndexOf('.')  ) .toLowerCase()  )
-{
-case '.pdf' : console.log(`<div class="fileinfoImg" style="background:url('/template/rawr_blue/images/pdf.png') center center no-repeat ;height:60px;"></div>`);break;
-														
-default: console.log('<div class="fileinfoImg" style="background:url(`/template/rawr_blue/images/Document.png`) center center no-repeat;height:60px;"></div>');}
-													
+function getTimeRemaining(endtime){
+   const t = Date.parse(endtime)-Date.parse(new Date());
+   const days = Math.floor(t/(1000*60*60*24)),
+         hours = Math.floor(t/(1000*60*60)%24),
+         minutes = Math.floor(t/(1000*60)%60),
+         seconds = Math.floor(t/(1000)%60);
+         return{
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds,
+         };
+}
 
-									
+function setClock(selector,endtime){
+   const timer = document.querySelector(selector),
+         days = timer.querySelector('#days'),
+         hours = timer.querySelector("#hours"),
+         minutes = timer.querySelector("#minutes"),
+         seconds = timer.querySelector("#seconds"),
+         timeInterval = setInterval(updateClock,1000);
+
+         updateClock();
+
+         function updateClock(){
+            const t = getTimeRemaining(endtime);
+            days.textContent = t.days;
+            hours.textContent = t.hours;
+            minutes.textContent = t.minutes;
+            seconds.textContent = t.seconds;
+            
+         }
+   
+}
+
+setClock('.timer',deadtime);
