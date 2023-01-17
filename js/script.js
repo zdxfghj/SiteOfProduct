@@ -73,3 +73,74 @@ function setClock(selector,endtime){
 }
 
 setClock('.timer',deadtime);
+
+
+
+
+
+
+// forms.forEach(item=>{
+//    postData(item);
+// });
+
+
+// function postData(form){
+//    form.addEventListener('submit',(e)=>{
+//       e.preventDafault();
+//    });
+//    const statusMessage = document.createElement('div');
+//    statusMessage.classList.add('status');
+//    statusMessage.textContent = message.loading;
+//    form.append(statusMessage);
+
+//    const request = new XMLHttpRequest();
+//    request.open('post','server.php');
+   
+//    request.setRequestHeader("Content-type","application/json");
+//    const formData = new FormData(form);
+
+//    const object = {};
+//    formData.forEach(function(value,key){
+//       object[key] = value;
+//    });
+//    const json = JSON.stringify(object);
+   
+//    request.send(json);
+
+//    request.addEventListener('load',()=>{
+//       if(request.status === 200){
+//          console.log('Sucsses')
+//       }
+//    });
+
+// };
+
+
+// modal
+   const btns = document.querySelectorAll('.btn'),
+         modal = document.querySelector('.modal'),
+         modalCloseBtn = document.querySelector('.modal__close');
+   btns.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+         modal.classList.add('display__block');
+         modal.classList.remove('display__none')
+      });
+   });
+   modalCloseBtn.addEventListener('click', ()=>{
+
+         modal.classList.remove('display__block');
+         modal.classList.add('display__none');
+
+   });
+
+   modal.addEventListener('click', (e)=>{
+      if(e.target === modal){
+         modal.classList.remove('display__block');
+         modal.classList.add('display__none');
+      }
+      
+   });
+
+
+//form 
+
