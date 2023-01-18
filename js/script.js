@@ -1,3 +1,5 @@
+"use strict"
+
 let tabMenu = document.querySelector('.tabheader__items'),
     tabItemMenu = document.querySelectorAll('.tabheader__item'),
     tabElems = document.querySelectorAll('.tabcontent')
@@ -75,45 +77,51 @@ function setClock(selector,endtime){
 setClock('.timer',deadtime);
 
 
+const forms = document.querySelectorAll('form');
+
+const message = {
+   loading: 'Загрузка',
+   success: 'Спасибо! Скоро мы с вами свяжемся',
+   failure:'Что-то не так'
+};
 
 
 
+forms.forEach(item=>{
+   postData(item);
+});
+ 
 
-// forms.forEach(item=>{
-//    postData(item);
-// });
+function postData(form){
+   form.addEventListener('submit',(e)=>{
+      e.preventDafault();
+   });
+   const statusMessage = document.createElement('div');
+   statusMessage.classList.add('status');
+   statusMessage.textContent = message.loading;
+   form.append(statusMessage);
 
-
-// function postData(form){
-//    form.addEventListener('submit',(e)=>{
-//       e.preventDafault();
-//    });
-//    const statusMessage = document.createElement('div');
-//    statusMessage.classList.add('status');
-//    statusMessage.textContent = message.loading;
-//    form.append(statusMessage);
-
-//    const request = new XMLHttpRequest();
-//    request.open('post','server.php');
+   const request = new XMLHttpRequest();
+   request.open('post','server.php');
    
-//    request.setRequestHeader("Content-type","application/json");
-//    const formData = new FormData(form);
+   request.setRequestHeader("Content-type","application/json");
+   const formData = new FormData(form);
 
-//    const object = {};
-//    formData.forEach(function(value,key){
-//       object[key] = value;
-//    });
-//    const json = JSON.stringify(object);
+   const object = {};
+   formData.forEach(function(value,key){
+      object[key] = value;
+   });
+   const json = JSON.stringify(object);
    
-//    request.send(json);
+   request.send(json);
 
-//    request.addEventListener('load',()=>{
-//       if(request.status === 200){
-//          console.log('Sucsses')
-//       }
-//    });
+   request.addEventListener('load',()=>{
+      if(request.status === 200){
+         console.log('Sucsses')
+      }
+   });
 
-// };
+};
 
 
 // modal
