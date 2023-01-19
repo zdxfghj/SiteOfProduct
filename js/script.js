@@ -1,4 +1,4 @@
-"use strict"
+window.addEventListener('DOMContentLoaded', function() {
 
 let tabMenu = document.querySelector('.tabheader__items'),
     tabItemMenu = document.querySelectorAll('.tabheader__item'),
@@ -76,7 +76,7 @@ function setClock(selector,endtime){
 
 setClock('.timer',deadtime);
 
-
+//form 
 const forms = document.querySelectorAll('form');
 
 const message = {
@@ -113,7 +113,7 @@ function postData(form){
    });
    const json = JSON.stringify(object);
    
-   request.send(json);
+   //request.send(json);
 
    request.addEventListener('load',()=>{
       if(request.status === 200){
@@ -150,5 +150,92 @@ function postData(form){
    });
 
 
-//form 
+   // Use class for creat card
 
+   class MenuCard {
+      constructor(src, alt, title, descr, price, parentSelector, ...classes) {
+          this.src = src;
+          this.alt = alt;
+          this.title = title;
+          this.descr = descr;
+          this.price = price;
+          this.classes = classes;
+          this.parent = document.querySelector(parentSelector);
+          this.transfer = 27;
+          this.changeToUAH(); 
+      }
+
+      changeToUAH() {
+          this.price = this.price * this.transfer; 
+      }
+
+      render() {
+          const element = document.createElement('div');
+
+          if (this.classes.length === 0) {
+              this.classes = "menu__item";
+              element.classList.add(this.classes);
+          } else {
+              this.classes.forEach(className => element.classList.add(className));
+          }
+
+          element.innerHTML = `
+              <img src=${this.src} alt=${this.alt}>
+              <h3 class="menu__item-subtitle">${this.title}</h3>
+              <div class="menu__item-descr">${this.descr}</div>
+              <div class="menu__item-divider"></div>
+              <div class="menu__item-price">
+                  <div class="menu__item-cost">Цена:</div>
+                  <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+              </div>
+          `;
+          this.parent.append(element);
+      }
+  }
+
+//   getResource('http://localhost:3000/menu')
+//       .then(data => {
+//           data.forEach(({img, altimg, title, descr, price}) => {
+//               new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
+//           });
+//       });
+
+
+//slider
+
+ const slides = document.querySelectorAll('.offer__slide'),
+       prev = document.querySelector('.offer__slider-prev'),
+       next = document.querySelector('.offer__slider-next'),
+       currentSlide = document.querySelector('#current'),
+       totalSlide = document.querySelector('#total');
+let sliderIndex = 1;
+
+showSlides(sliderIndex);
+
+function showSlides(n){
+   totalSlide.textContent = (slides.length>10)?  slides.length: '0'+slides.length;
+   if(n > slides.length){
+      sliderIndex = 1;
+   }
+   if(n < 1){
+      sliderIndex = slides.length;
+   }
+   slides.forEach(item => item.style.display = 'none');
+
+   slides[sliderIndex-1].style.display = 'block'
+   currentSlide.textContent = (sliderIndex>10)?  sliderIndex: '0'+sliderIndex;
+  
+  
+}
+function plusSlides(n){
+   showSlides(sliderIndex += n)
+}
+
+prev.addEventListener('click', ()=>{
+   plusSlides(-1);
+});
+next.addEventListener('click', ()=>{
+   plusSlides(1);
+});
+
+});
