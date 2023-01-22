@@ -223,7 +223,9 @@ function bindPostData(form) {
        /////slider_carusel
        let offset = 0; ///отступ
  const   sliderWrapper = document.querySelector(".offer__slider-wrapper"),
+         dots = [],
          sliderField = document.querySelector(".offer__slider-inner"),
+         slider = this.document.querySelector(".offer__slider"),
          width = window.getComputedStyle(sliderWrapper).width;
 
          totalSlide.textContent = (slides.length>10)?  slides.length: '0'+slides.length;
@@ -238,6 +240,24 @@ function bindPostData(form) {
             slide.style.width = width;
          });
 
+////////navigation for slider
+         slider.style.position = 'relative';
+
+         const indicators = document.createElement('ol');
+         indicators.classList.add('carousel-indicators');
+         slider.append(indicators);
+        
+         for(let i = 0; i < slides.length; i++){
+            const dot = document.createElement('li');
+            dot.setAttribute('data-slide-to', i+1);
+            dot.classList.add("dot");
+            if(i == 0){
+               dot.style.opacity = 1;
+            }
+            indicators.append(dot);
+            dots.push(dot);
+         }
+////
          
          prev.addEventListener('click', ()=>{
             if(offset  == 0){ ///500px
@@ -249,6 +269,10 @@ function bindPostData(form) {
            (sliderIndex == 1) ?  (sliderIndex = slides.length) : sliderIndex--;
             currentSlide.textContent = (sliderIndex<10)?  `0${sliderIndex}`: sliderIndex;
             sliderField.style.transform = `translateX(-${offset}px)`;
+
+            dots.forEach(dot=> dot.style.opacity = '.5');
+            dots[sliderIndex-1].style.opacity = '1';
+
          });
          next.addEventListener('click', ()=>{
             if(offset  == +width.slice(0,width.length - 2)*(slides.length-1)){ ///500px
@@ -259,7 +283,27 @@ function bindPostData(form) {
             (sliderIndex == slides.length) ?  (sliderIndex = 1) : sliderIndex++;
             currentSlide.textContent = (sliderIndex<10)?  `0${sliderIndex}` : sliderIndex;
             sliderField.style.transform = `translateX(-${offset}px)`;
+
+            dots.forEach(dot=> dot.style.opacity = '.5');
+            dots[sliderIndex-1].style.opacity = '1';
+
          });
+
+         dots.forEach(dot =>{
+            dot.addEventListener('click', (e) =>{
+               const slideTo = e.target.getAttribute('data-slide-to');
+
+               sliderIndex = slideTo;
+               offset = +width.slice(0,width.length - 2)*(slideTo-1);
+
+               sliderField.style.transform = `translateX(-${offset}px)`;
+
+               currentSlide.textContent = (sliderIndex<10)?  `0${sliderIndex}` : sliderIndex;
+
+               dots.forEach(dot=> dot.style.opacity = '.5');
+               dots[sliderIndex-1].style.opacity = '1';
+            });
+         })
 
        /////
 
