@@ -1,3 +1,5 @@
+"use strict"
+
 window.addEventListener('DOMContentLoaded', function() {
 
 let tabMenu = document.querySelector('.tabheader__items'),
@@ -77,51 +79,59 @@ function setClock(selector,endtime){
 setClock('.timer',deadtime);
 
 //form 
-const forms = document.querySelectorAll('form');
 
+const forms = document.querySelectorAll('form');
 const message = {
-   loading: 'Загрузка',
-   success: 'Спасибо! Скоро мы с вами свяжемся',
-   failure:'Что-то не так'
+    loading: 'Загрузка...',
+    success: 'Спасибо! Скоро мы с вами свяжемся',
+    failure: 'Что-то пошло не так...'
 };
 
-
-
-forms.forEach(item=>{
-   postData(item);
+forms.forEach(item => {
+   bindPostData(item);
 });
- 
 
 function postData(form){
-   form.addEventListener('submit',(e)=>{
-      e.preventDafault();
-   });
-   const statusMessage = document.createElement('div');
-   statusMessage.classList.add('status');
-   statusMessage.textContent = message.loading;
-   form.append(statusMessage);
 
-   const request = new XMLHttpRequest();
-   request.open('post','server.php');
-   
-   request.setRequestHeader("Content-type","application/json");
-   const formData = new FormData(form);
+}
 
-   const object = {};
-   formData.forEach(function(value,key){
-      object[key] = value;
-   });
-   const json = JSON.stringify(object);
-   
-   //request.send(json);
 
-   request.addEventListener('load',()=>{
-      if(request.status === 200){
-         console.log('Sucsses')
-      }
-   });
+function bindPostData(form) {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-};
+        let statusMessage = document.createElement('div');
+        statusMessage.classList.add('status');
+        statusMessage.textContent = message.loading;
+        form.appendChild(statusMessage);
+    
+        const request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        const formData = new FormData(form);
+
+        const object = {};
+        formData.forEach(function(value, key){
+            object[key] = value;
+        });
+        const json = JSON.stringify(object);
+
+        request.send(json);
+
+        request.addEventListener('load', () => {
+            if (request.status === 200) {
+                console.log(request.response);
+                statusMessage.textContent = message.success;
+                form.reset();
+                setTimeout(() => {
+                    statusMessage.remove();
+                }, 2000);
+            } else {
+                statusMessage.textContent = message.failure;
+            }
+        });
+    });
+}
 
 
 // modal
@@ -208,34 +218,77 @@ function postData(form){
        next = document.querySelector('.offer__slider-next'),
        currentSlide = document.querySelector('#current'),
        totalSlide = document.querySelector('#total');
-let sliderIndex = 1;
+       let sliderIndex = 1;
+      
+       /////slider_carusel
+       let offset = 0; ///отступ
+ const   sliderWrapper = document.querySelector(".offer__slider-wrapper"),
+         sliderField = document.querySelector(".offer__slider-inner"),
+         width = window.getComputedStyle(sliderWrapper).width;
 
-showSlides(sliderIndex);
+         totalSlide.textContent = (slides.length>10)?  slides.length: '0'+slides.length;
+         currentSlide.textContent = (sliderIndex>10)?  sliderIndex: '0'+sliderIndex;
 
-function showSlides(n){
-   totalSlide.textContent = (slides.length>10)?  slides.length: '0'+slides.length;
-   if(n > slides.length){
-      sliderIndex = 1;
-   }
-   if(n < 1){
-      sliderIndex = slides.length;
-   }
-   slides.forEach(item => item.style.display = 'none');
+         sliderField.style.width = 100 * slides.length + '%';
+         sliderField.style.display = 'flex';
+         sliderField.style.transition = "0.5s all";
+         sliderWrapper.style.overflow = 'hidden';
 
-   slides[sliderIndex-1].style.display = 'block'
-   currentSlide.textContent = (sliderIndex>10)?  sliderIndex: '0'+sliderIndex;
+         slides.forEach(slide=>{
+            slide.style.width = width;
+         });
+
+         
+         prev.addEventListener('click', ()=>{
+            if(offset  == 0){ ///500px
+               offset = +width.slice(0,width.length - 2)*(slides.length-1);
+            } else {
+               offset -= +width.slice(0,width.length - 2)
+            }
+           
+           (sliderIndex == 1) ?  (sliderIndex = slides.length) : sliderIndex--;
+            currentSlide.textContent = (sliderIndex<10)?  `0${sliderIndex}`: sliderIndex;
+            sliderField.style.transform = `translateX(-${offset}px)`;
+         });
+         next.addEventListener('click', ()=>{
+            if(offset  == +width.slice(0,width.length - 2)*(slides.length-1)){ ///500px
+               offset = 0;
+            } else {
+               offset += +width.slice(0,width.length - 2)
+            }
+            (sliderIndex == slides.length) ?  (sliderIndex = 1) : sliderIndex++;
+            currentSlide.textContent = (sliderIndex<10)?  `0${sliderIndex}` : sliderIndex;
+            sliderField.style.transform = `translateX(-${offset}px)`;
+         });
+
+       /////
+
+
+// showSlides(sliderIndex);
+
+// function showSlides(n){
+//    totalSlide.textContent = (slides.length>10)?  slides.length: '0'+slides.length;
+//    if(n > slides.length){
+//       sliderIndex = 1;
+//    }
+//    if(n < 1){
+//       sliderIndex = slides.length;
+//    }
+//    slides.forEach(item => item.style.display = 'none');
+
+//    slides[sliderIndex-1].style.display = 'block'
+//    currentSlide.textContent = (sliderIndex>10)?  sliderIndex: '0'+sliderIndex;
   
   
-}
-function plusSlides(n){
-   showSlides(sliderIndex += n)
-}
+// }
+// function plusSlides(n){
+//    showSlides(sliderIndex += n)
+// }
 
-prev.addEventListener('click', ()=>{
-   plusSlides(-1);
-});
-next.addEventListener('click', ()=>{
-   plusSlides(1);
-});
-
+// prev.addEventListener('click', ()=>{
+//    plusSlides(-1);
+// });
+// next.addEventListener('click', ()=>{
+//    plusSlides(1);
+// })
 });
