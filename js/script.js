@@ -1,3 +1,5 @@
+"use strict"
+
 window.addEventListener('DOMContentLoaded', function() {
 
 let tabMenu = document.querySelector('.tabheader__items'),
@@ -77,51 +79,59 @@ function setClock(selector,endtime){
 setClock('.timer',deadtime);
 
 //form 
-const forms = document.querySelectorAll('form');
 
+const forms = document.querySelectorAll('form');
 const message = {
-   loading: 'Загрузка',
-   success: 'Спасибо! Скоро мы с вами свяжемся',
-   failure:'Что-то не так'
+    loading: 'Загрузка...',
+    success: 'Спасибо! Скоро мы с вами свяжемся',
+    failure: 'Что-то пошло не так...'
 };
 
-
-
-forms.forEach(item=>{
-   postData(item);
+forms.forEach(item => {
+   bindPostData(item);
 });
- 
 
 function postData(form){
-   form.addEventListener('submit',(e)=>{
-      e.preventDafault();
-   });
-   const statusMessage = document.createElement('div');
-   statusMessage.classList.add('status');
-   statusMessage.textContent = message.loading;
-   form.append(statusMessage);
 
-   const request = new XMLHttpRequest();
-   request.open('post','server.php');
-   
-   request.setRequestHeader("Content-type","application/json");
-   const formData = new FormData(form);
+}
 
-   const object = {};
-   formData.forEach(function(value,key){
-      object[key] = value;
-   });
-   const json = JSON.stringify(object);
-   
-   //request.send(json);
 
-   request.addEventListener('load',()=>{
-      if(request.status === 200){
-         console.log('Sucsses')
-      }
-   });
+function bindPostData(form) {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-};
+        let statusMessage = document.createElement('div');
+        statusMessage.classList.add('status');
+        statusMessage.textContent = message.loading;
+        form.appendChild(statusMessage);
+    
+        const request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        const formData = new FormData(form);
+
+        const object = {};
+        formData.forEach(function(value, key){
+            object[key] = value;
+        });
+        const json = JSON.stringify(object);
+
+        request.send(json);
+
+        request.addEventListener('load', () => {
+            if (request.status === 200) {
+                console.log(request.response);
+                statusMessage.textContent = message.success;
+                form.reset();
+                setTimeout(() => {
+                    statusMessage.remove();
+                }, 2000);
+            } else {
+                statusMessage.textContent = message.failure;
+            }
+        });
+    });
+}
 
 
 // modal
@@ -208,34 +218,193 @@ function postData(form){
        next = document.querySelector('.offer__slider-next'),
        currentSlide = document.querySelector('#current'),
        totalSlide = document.querySelector('#total');
-let sliderIndex = 1;
+       let sliderIndex = 1;
+      
+       /////slider_carusel
+       let offset = 0; ///отступ
+ const   sliderWrapper = document.querySelector(".offer__slider-wrapper"),
+         dots = [],
+         sliderField = document.querySelector(".offer__slider-inner"),
+         slider = this.document.querySelector(".offer__slider"),
+         width = window.getComputedStyle(sliderWrapper).width;
 
-showSlides(sliderIndex);
+         totalSlide.textContent = (slides.length>10)?  slides.length: '0'+slides.length;
+         currentSlide.textContent = (sliderIndex>10)?  sliderIndex: '0'+sliderIndex;
 
-function showSlides(n){
-   totalSlide.textContent = (slides.length>10)?  slides.length: '0'+slides.length;
-   if(n > slides.length){
-      sliderIndex = 1;
-   }
-   if(n < 1){
-      sliderIndex = slides.length;
-   }
-   slides.forEach(item => item.style.display = 'none');
+         sliderField.style.width = 100 * slides.length + '%';
+         sliderField.style.display = 'flex';
+         sliderField.style.transition = "0.5s all";
+         sliderWrapper.style.overflow = 'hidden';
 
-   slides[sliderIndex-1].style.display = 'block'
-   currentSlide.textContent = (sliderIndex>10)?  sliderIndex: '0'+sliderIndex;
+         slides.forEach(slide=>{
+            slide.style.width = width;
+         });
+
+////////navigation for slider
+         slider.style.position = 'relative';
+
+         const indicators = document.createElement('ol');
+         indicators.classList.add('carousel-indicators');
+         slider.append(indicators);
+        
+         for(let i = 0; i < slides.length; i++){
+            const dot = document.createElement('li');
+            dot.setAttribute('data-slide-to', i+1);
+            dot.classList.add("dot");
+            if(i == 0){
+               dot.style.opacity = 1;
+            }
+            indicators.append(dot);
+            dots.push(dot);
+         }
+////
+         
+         prev.addEventListener('click', ()=>{
+            if(offset  == 0){ ///500px
+               offset = +width.slice(0,width.length - 2)*(slides.length-1);
+            } else {
+               offset -= +width.slice(0,width.length - 2)
+            }
+           
+           (sliderIndex == 1) ?  (sliderIndex = slides.length) : sliderIndex--;
+            currentSlide.textContent = (sliderIndex<10)?  `0${sliderIndex}`: sliderIndex;
+            sliderField.style.transform = `translateX(-${offset}px)`;
+
+            dots.forEach(dot=> dot.style.opacity = '.5');
+            dots[sliderIndex-1].style.opacity = '1';
+
+         });
+         next.addEventListener('click', ()=>{
+            if(offset  == +width.slice(0,width.length - 2)*(slides.length-1)){ ///500px
+               offset = 0;
+            } else {
+               offset += +width.slice(0,width.length - 2)
+            }
+            (sliderIndex == slides.length) ?  (sliderIndex = 1) : sliderIndex++;
+            currentSlide.textContent = (sliderIndex<10)?  `0${sliderIndex}` : sliderIndex;
+            sliderField.style.transform = `translateX(-${offset}px)`;
+
+            dots.forEach(dot=> dot.style.opacity = '.5');
+            dots[sliderIndex-1].style.opacity = '1';
+
+         });
+
+         dots.forEach(dot =>{
+            dot.addEventListener('click', (e) =>{
+               const slideTo = e.target.getAttribute('data-slide-to');
+
+               sliderIndex = slideTo;
+               offset = +width.slice(0,width.length - 2)*(slideTo-1);
+
+               sliderField.style.transform = `translateX(-${offset}px)`;
+
+               currentSlide.textContent = (sliderIndex<10)?  `0${sliderIndex}` : sliderIndex;
+
+               dots.forEach(dot=> dot.style.opacity = '.5');
+               dots[sliderIndex-1].style.opacity = '1';
+            });
+         })
+
+       /////
+
+
+// showSlides(sliderIndex);
+
+// function showSlides(n){
+//    totalSlide.textContent = (slides.length>10)?  slides.length: '0'+slides.length;
+//    if(n > slides.length){
+//       sliderIndex = 1;
+//    }
+//    if(n < 1){
+//       sliderIndex = slides.length;
+//    }
+//    slides.forEach(item => item.style.display = 'none');
+
+//    slides[sliderIndex-1].style.display = 'block'
+//    currentSlide.textContent = (sliderIndex>10)?  sliderIndex: '0'+sliderIndex;
   
   
-}
-function plusSlides(n){
-   showSlides(sliderIndex += n)
-}
+// }
+// function plusSlides(n){
+//    showSlides(sliderIndex += n)
+// }
 
-prev.addEventListener('click', ()=>{
-   plusSlides(-1);
-});
-next.addEventListener('click', ()=>{
-   plusSlides(1);
-});
+// prev.addEventListener('click', ()=>{
+//    plusSlides(-1);
+// });
+// next.addEventListener('click', ()=>{
+//    plusSlides(1);
+// })
+
+
+ // Calculator
+
+ const result = document.querySelector('.calculating__result span');
+ let sex = 'female',
+     height, weight, age,
+     ratio = 1.375;
+
+ function calcTotal() {
+     if (!sex || !height || !weight || !age || !ratio) {
+         result.textContent = '____'; // Можете придумать что угодно
+         return;
+     }
+     if (sex === 'female') {
+         result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+     } else {
+         result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+     }
+ }
+
+ calcTotal();
+
+ function getStaticInformation(parentSelector, activeClass) {
+     const elements = document.querySelectorAll(`${parentSelector} div`);
+
+     elements.forEach(elem => {
+         elem.addEventListener('click', (e) => {
+             if (e.target.getAttribute('data-ratio')) {
+                 ratio = +e.target.getAttribute('data-ratio');
+             } else {
+                 sex = e.target.getAttribute('id');
+             }
+ 
+             elements.forEach(elem => {
+                 elem.classList.remove(activeClass);
+             });
+ 
+             e.target.classList.add(activeClass);
+ 
+             calcTotal();
+         });
+     });
+ }
+
+ getStaticInformation('#gender', 'calculating__choose-item_active');
+ getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
+
+ function getDynamicInformation(selector) {
+     const input = document.querySelector(selector);
+
+     input.addEventListener('input', () => {
+         switch(input.getAttribute('id')) {
+             case "height":
+                 height = +input.value;
+                 break;
+             case "weight":
+                 weight = +input.value;
+                 break;
+             case "age":
+                 age = +input.value;
+                 break;
+         }
+
+         calcTotal();
+     });
+ }
+
+ getDynamicInformation('#height');
+ getDynamicInformation('#weight');
+ getDynamicInformation('#age');
 
 //Calc -part one
