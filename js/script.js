@@ -238,4 +238,4 @@ next.addEventListener('click', ()=>{
    plusSlides(1);
 });
 
-});
+//Calc -part one
