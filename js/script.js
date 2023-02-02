@@ -1,5 +1,6 @@
 "use strict"
 
+require('es6-promise').polyfill;
 
 import tabs from './modules/tabs.js';
 import card from './modules/card.js';
